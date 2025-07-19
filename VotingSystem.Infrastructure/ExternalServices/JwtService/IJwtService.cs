@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace VotingSystem.Common.Helpers
+namespace VotingSystem.Infrastructure.ExternalServices.JwtService
 {
-    internal class JwtHelper
+    public interface IJwtService
     {
     }
 }

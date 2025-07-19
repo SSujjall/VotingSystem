@@ -4,9 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace VotingSystem.Common.Config
+namespace VotingSystem.Domain.Enums
 {
-    internal class JwtConfig
+    public enum UserRoles
     {
+        Superadmin,
+        Admin,
+        User
     }
 }
