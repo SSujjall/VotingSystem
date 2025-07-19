@@ -1,6 +1,25 @@
-﻿namespace VotingSystem.API.Features.Auth.DTOs
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace VotingSystem.API.Features.Auth.DTOs
 {
     public class SignupDTO
     {
+        [Required(ErrorMessage = "User Name is required")]
+        public string Username { get; set; }
+
+        [Required(ErrorMessage = "User Name is required")]
+        public string FullName { get; set; }
+
+        [EmailAddress]
+        [Required(ErrorMessage = "Email is required")]
+        public string Email { get; set; }
+
+        [Required(ErrorMessage = "Password is required")]
+        public string Password { get; set; }
+    }
+
+    public class SignupResponseDTO
+    {
+        public string EmailConfirmToken { get; set; }
     }
 }

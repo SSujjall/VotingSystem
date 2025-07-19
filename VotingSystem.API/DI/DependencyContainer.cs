@@ -1,13 +1,12 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
 using VotingSystem.API.Features.Auth.Services;
-using VotingSystem.API.Features.User.Services;
+using VotingSystem.API.Features.UserProfile.Services;
 using VotingSystem.API.Features.Voting.Services;
 using VotingSystem.Domain.Entities;
 using VotingSystem.Infrastructure.Data;
+using VotingSystem.Infrastructure.ExternalServices.EmailService;
+using VotingSystem.Infrastructure.ExternalServices.JwtService;
 using VotingSystem.Infrastructure.Repositories.Implementations;
 using VotingSystem.Infrastructure.Repositories.Interfaces;
 
@@ -25,7 +24,7 @@ namespace VotingSystem.API.DI
             #endregion
 
             #region Identity User and Role Config
-            services.AddIdentity<User, Role>(opts =>
+            services.AddIdentity<User, IdentityRole>(opts =>
             {
                 opts.SignIn.RequireConfirmedAccount = false;
                 opts.Password.RequireDigit = false;
@@ -40,46 +39,18 @@ namespace VotingSystem.API.DI
             #region Register Repositories
             services.AddTransient(typeof(IBaseRepository<>), typeof(BaseRepository<>));
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IAuthRepository, AuthRepository>();
             #endregion
 
             #region Register Services
-            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IUserProfileService, UserProfileService>();
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IVotingService, VotingService>();
             #endregion
 
-            #region Register JWT
-            services.AddAuthentication(opts =>
-            {
-                opts.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                opts.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-                .AddJwtBearer(options =>
-                {
-                    options.SaveToken = true;
-                    options.RequireHttpsMetadata = false;
-                    options.TokenValidationParameters = new TokenValidationParameters();
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuer = true,
-                        ValidateAudience = true,
-                        ValidateLifetime = true,
-                        ClockSkew = TimeSpan.Zero, // Prevent extra valid time after expiry
-                        ValidAudience = configuration["JWT:ValidAudience"],
-                        ValidIssuer = configuration["JWT:ValidIssuer"],
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"]))
-                    };
-                });
-            #endregion
-
-            #region CORS Policy
-            services.AddCors(options =>
-            {
-                options.AddPolicy("AllowAll", policy =>
-                {
-                    policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
-                });
-            });
+            #region Register External Services
+            services.AddScoped<IJwtService, JwtService>();
+            services.AddScoped<IEmailService, EmailService>();
             #endregion
 
             return services;
