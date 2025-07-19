@@ -66,10 +66,18 @@ namespace VotingSystem.API.Features.Auth.Controllers
 
         [HttpGet("auth-test")]
         [Authorize]
-        public async Task<IActionResult> AuthorizeTest()
+        public IActionResult AuthorizeTest()
         {
-            var response = $"You are authenticatred";
-            return Ok(response);
+            var exp = User.FindFirst("exp")?.Value;
+            if (exp != null && long.TryParse(exp, out var expUnix))
+            {
+                var expDateTimeUtc = DateTimeOffset.FromUnixTimeSeconds(expUnix).LocalDateTime;
+
+                var response = $"You are authenticated. Token expires at: {expDateTimeUtc}";
+                return Ok(response);
+            }
+
+            return BadRequest("Expiration claim not found");
         }
     }
 }

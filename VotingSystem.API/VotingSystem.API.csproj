@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="15.0.1" />
+    <PackageReference Include="AutoMapper" Version="13.0.1" />
     <PackageReference Include="MailKit" Version="4.13.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.14" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.0" />
@@ -24,6 +24,7 @@
   <ItemGroup>
     <Folder Include="Features\Export\" />
     <Folder Include="Features\Hubs\" />
+    <Folder Include="wwwroot\" />
   </ItemGroup>
 
   <ItemGroup>

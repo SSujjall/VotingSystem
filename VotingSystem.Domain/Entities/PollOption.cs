@@ -16,6 +16,7 @@ namespace VotingSystem.Domain.Entities
         [ForeignKey(nameof(Poll))]
         public int PollId { get; set; }
         public string OptionText { get; set; } = string.Empty;
+        public string? ImagePath { get; set; }
         public int VoteCount { get; set; } = 0;
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 

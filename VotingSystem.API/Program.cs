@@ -3,6 +3,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 using VotingSystem.API.DI;
+using VotingSystem.API.Mappers;
 using VotingSystem.Common.Middlewares;
 using VotingSystem.Infrastructure.ExternalServices.EmailService.Config;
 using VotingSystem.Infrastructure.ExternalServices.JwtService.Config;
@@ -83,6 +84,9 @@ var emailConfig = builder.Configuration.GetSection("EmailConfiguration").Get<Ema
 builder.Services.AddSingleton(emailConfig);
 #endregion
 
+// Automapper Config
+builder.Services.AddAutoMapper(typeof(PollMappingProfile));
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -91,6 +95,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "VotingSystem API v1"));
 }
+
+app.UseStaticFiles();
+
 
 // Custom global error handling extension
 app.UseErrorHandling();

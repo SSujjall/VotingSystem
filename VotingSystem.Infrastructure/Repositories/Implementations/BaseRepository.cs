@@ -1,10 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 using VotingSystem.Common.RequestModel;
 using VotingSystem.Infrastructure.Data;
 using VotingSystem.Infrastructure.Repositories.Interfaces;
@@ -13,13 +8,11 @@ namespace VotingSystem.Infrastructure.Repositories.Implementations
 {
     public class BaseRepository<T> : IBaseRepository<T> where T : class
     {
-        private readonly AppDbContext _dbContext;
-        protected readonly DbSet<T> _dbSet; // for reaction repo
+        protected readonly AppDbContext _dbContext;
 
         public BaseRepository(AppDbContext dbContext)
         {
             _dbContext = dbContext;
-            _dbSet = dbContext.Set<T>();
         }
 
         public async Task<T> Add(T entity)

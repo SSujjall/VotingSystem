@@ -14,14 +14,13 @@ namespace VotingSystem.Common.ResponseModel
         public T Data { get; set; }
         public HttpStatusCode StatusCode { get; set; }
         public Dictionary<string, string> Errors { get; set; }
-        public int? TotalCount { get; set; }
 
         private ApiResponse()
         {
             Errors = new Dictionary<string, string>();
         }
 
-        public static ApiResponse<T> Success(T data, string message, HttpStatusCode statusCode = HttpStatusCode.OK, int? totalCount = null)
+        public static ApiResponse<T> Success(T data, string message, HttpStatusCode statusCode = HttpStatusCode.OK)
         {
             return new ApiResponse<T>
             {
@@ -29,7 +28,6 @@ namespace VotingSystem.Common.ResponseModel
                 Message = message,
                 Data = data,
                 StatusCode = statusCode,
-                TotalCount = totalCount
             };
         }
 

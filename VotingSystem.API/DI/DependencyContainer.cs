@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using VotingSystem.API.Features.Auth.Services;
+using VotingSystem.API.Features.Polls.Services;
 using VotingSystem.API.Features.UserProfile.Services;
 using VotingSystem.API.Features.Voting.Services;
 using VotingSystem.Domain.Entities;
@@ -40,12 +41,14 @@ namespace VotingSystem.API.DI
             services.AddTransient(typeof(IBaseRepository<>), typeof(BaseRepository<>));
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IAuthRepository, AuthRepository>();
+            services.AddScoped<IPollRepository, PollRepository>();
             #endregion
 
             #region Register Services
             services.AddScoped<IUserProfileService, UserProfileService>();
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IVotingService, VotingService>();
+            services.AddScoped<IPollsService, PollsService>();
             #endregion
 
             #region Register External Services
