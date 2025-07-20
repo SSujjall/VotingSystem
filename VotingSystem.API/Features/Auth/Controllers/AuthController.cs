@@ -41,6 +41,22 @@ namespace VotingSystem.API.Features.Auth.Controllers
             return Ok(response);
         }
 
+        [HttpPost("signup-admin")]
+        [Authorize(Roles = "Superadmin")]
+        public async Task<IActionResult> RegisterAdmin(SignupDTO signupDto)
+        {
+            var response = await _authService.RegisterUser(signupDto, true);
+            if (response.StatusCode != HttpStatusCode.OK)
+            {
+                return Accepted(response);
+            }
+
+            var verificationLink = Url.Action(nameof(ConfirmEmail), "Auth", new { token = response.Data.EmailConfirmToken, email = signupDto.Email }, Request.Scheme);
+            var emailMessage = new EmailMessage(new[] { signupDto.Email }, "Please confirm your email", $"Please confirm your email by clicking the link: {verificationLink}");
+            await _emailService.SendEmailAsync(emailMessage);
+            return Ok(response);
+        }
+
         [HttpGet("confirm-email")]
         public async Task<IActionResult> ConfirmEmail(string token, string email)
         {

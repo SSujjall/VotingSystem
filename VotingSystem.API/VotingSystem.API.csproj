@@ -22,7 +22,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\Export\" />
     <Folder Include="Features\Hubs\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>

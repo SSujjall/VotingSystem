@@ -25,7 +25,7 @@ namespace VotingSystem.API.Features.Auth.Services
             _jwtService = jwtService;
         }
 
-        public async Task<ApiResponse<SignupResponseDTO>> RegisterUser(SignupDTO signupDto)
+        public async Task<ApiResponse<SignupResponseDTO>> RegisterUser(SignupDTO signupDto, bool isAdmin = false)
         {
             // Check if the username already exists
             if (await _authRepository.UsernameExists(signupDto.Username))
@@ -56,14 +56,24 @@ namespace VotingSystem.API.Features.Auth.Services
                 return ApiResponse<SignupResponseDTO>.Failed(errors, "User Creation Failed.", HttpStatusCode.InternalServerError);
             }
 
-            // Ensure the role exists
-            if (!await _roleManager.RoleExistsAsync(UserRoles.User.ToString()))
+            UserRoles role;
+            if (isAdmin is true)
             {
-                var role = new IdentityRole(UserRoles.User.ToString())
+                role = UserRoles.Admin;
+            }
+            else
+            {
+                role = UserRoles.User;
+            }
+
+            // Ensure the user role exists
+            if (!await _roleManager.RoleExistsAsync(role.ToString()))
+            {
+                var newRole= new IdentityRole(role.ToString())
                 {
                     ConcurrencyStamp = Guid.NewGuid().ToString()
                 };
-                var roleCreateResult = await _roleManager.CreateAsync(role);
+                var roleCreateResult = await _roleManager.CreateAsync(newRole);
                 if (!roleCreateResult.Succeeded)
                 {
                     var errors = new Dictionary<string, string> { { "Role", "Failed to create role" } };
@@ -72,7 +82,7 @@ namespace VotingSystem.API.Features.Auth.Services
             }
 
             // Add user to the role
-            var addToRoleResult = await _userManager.AddToRoleAsync(user, UserRoles.User.ToString());
+            var addToRoleResult = await _userManager.AddToRoleAsync(user, role.ToString());
             if (!addToRoleResult.Succeeded)
             {
                 var errors = new Dictionary<string, string> { { "User", "Failed to assign role to user" } };
