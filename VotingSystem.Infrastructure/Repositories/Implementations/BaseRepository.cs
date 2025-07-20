@@ -22,15 +22,11 @@ namespace VotingSystem.Infrastructure.Repositories.Implementations
             return result.Entity;
         }
 
-        public async Task Delete(T entity)
+        public async Task<bool> Delete(T entity)
         {
             _dbContext.Remove(entity);
-            await _dbContext.SaveChangesAsync();
-        }
-
-        public async Task<T> FindSingleByConditionAsync(Expression<Func<T, bool>> expression)
-        {
-            return await _dbContext.Set<T>().FirstOrDefaultAsync(expression);
+            var affectedRows = await _dbContext.SaveChangesAsync();
+            return affectedRows > 0;
         }
 
         public async Task<IEnumerable<T>> GetAll(GetRequest<T>? request)
@@ -69,13 +65,6 @@ namespace VotingSystem.Infrastructure.Repositories.Implementations
             var result = _dbContext.Update(entity);
             await SaveChangesAsync();
             return result.Entity;
-        }
-
-        public async Task<IEnumerable<T>> FindAllByConditionAsync(Expression<Func<T, bool>> expression)
-        {
-            return await _dbContext.Set<T>()
-                .Where(expression)
-                .ToListAsync();
         }
     }
 }

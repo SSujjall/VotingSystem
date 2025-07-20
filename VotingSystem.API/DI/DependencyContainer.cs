@@ -42,13 +42,15 @@ namespace VotingSystem.API.DI
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IAuthRepository, AuthRepository>();
             services.AddScoped<IPollRepository, PollRepository>();
+            services.AddScoped<IVoteRepository, VoteRepository>();
             #endregion
 
             #region Register Services
             services.AddScoped<IUserProfileService, UserProfileService>();
             services.AddScoped<IAuthService, AuthService>();
-            services.AddScoped<IVotingService, VotingService>();
+            services.AddScoped<IVoteService, VoteService>();
             services.AddScoped<IPollsService, PollsService>();
+            services.AddScoped<IVoteService, VoteService>();
             #endregion
 
             #region Register External Services

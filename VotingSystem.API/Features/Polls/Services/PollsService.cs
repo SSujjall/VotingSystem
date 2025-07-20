@@ -21,6 +21,11 @@ namespace VotingSystem.API.Features.Polls.Services
 
         public async Task<ApiResponse<PollResponseDTO>> CreatePoll(string userId, CreatePollDTO dto)
         {
+            if (dto.Options is null || dto.Options.Count < 2)
+            {
+                return ApiResponse<PollResponseDTO>.Failed(null, "Need atleast 2 options");
+            }
+
             #region request mapping
             var poll = _mapper.Map<Poll>(dto);
             poll.CreatedBy = userId;
@@ -46,10 +51,14 @@ namespace VotingSystem.API.Features.Polls.Services
 
             if (poll.CreatedBy != userId)
             {
-                return ApiResponse<string>.Failed(null, "No privilege to delete");
+                return ApiResponse<string>.Failed(null, "Unauthorized deletetion attempt");
             }
 
-            await _pollRepository.Delete(poll);
+            var result = await _pollRepository.Delete(poll);
+            if (result is false)
+            {
+                return ApiResponse<string>.Failed(null, "Failed to delete poll");
+            }
             return ApiResponse<string>.Success(null, "Poll deleted successfully");
         }
 
