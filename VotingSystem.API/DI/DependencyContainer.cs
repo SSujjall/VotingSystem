@@ -71,6 +71,10 @@ namespace VotingSystem.API.DI
                 .AddCheck<DbHealthCheck>("Database");
             #endregion
 
+            #region Register SignalR
+            services.AddSignalR();
+            #endregion
+
             return services;
         }
     }
