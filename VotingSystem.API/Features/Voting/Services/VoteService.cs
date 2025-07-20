@@ -1,4 +1,6 @@
-﻿using AutoMapper;
+using AutoMapper;
+using Microsoft.AspNetCore.SignalR;
+using VotingSystem.API.Features.Hubs;
 using VotingSystem.API.Features.Polls.DTOs;
 using VotingSystem.API.Features.Voting.DTOs;
 using VotingSystem.Common.ResponseModel;
@@ -13,13 +15,15 @@ namespace VotingSystem.API.Features.Voting.Services
         private readonly IVoteRepository _voteRepository;
         private readonly IMapper _mapper;
         private readonly ILogger<VoteService> _logger;
-
+        private readonly IHubContext<VoteHub> _hubContext;
+        
         public VoteService(IPollRepository pollRepository, IVoteRepository voteRepository,
-            IMapper mapper, ILogger<VoteService> logger)
+            IMapper mapper, ILogger<VoteService> logger, IHubContext<VoteHub> hubContext)
         {
             _pollRepository = pollRepository;
             _voteRepository = voteRepository;
             _mapper = mapper;
+            _hubContext = hubContext;
             _logger = logger;
         }
 
@@ -67,6 +71,21 @@ namespace VotingSystem.API.Features.Voting.Services
                 {
                     return ApiResponse<VoteResponseDTO>.Failed(null, "Failed to update poll's voting count");
                 }
+                
+                #region SignalR Update
+                await _hubContext.Clients
+                    .Group($"poll-{poll.PollId}")
+                    .SendAsync("ReceiveVoteUpdate", new
+                    {
+                        PollId = poll.PollId,
+                        Options = poll.Options.Select(o => new
+                        {
+                            o.PollOptionId,
+                            o.OptionText,
+                            o.VoteCount
+                        }).ToList()
+                    });
+                #endregion
 
                 var mappedRes = _mapper.Map<VoteResponseDTO>(result);
                 return ApiResponse<VoteResponseDTO>.Success(mappedRes, "Vote successfully casted");
@@ -111,6 +130,22 @@ namespace VotingSystem.API.Features.Voting.Services
                 {
                     return ApiResponse<string>.Failed(null, "Failed to remove vote.");
                 }
+                
+                #region SignalR Update
+                await _hubContext.Clients
+                    .Group($"poll-{poll.PollId}")
+                    .SendAsync("ReceiveVoteUpdate", new
+                    {
+                        PollId = poll.PollId,
+                        Options = poll.Options.Select(o => new
+                        {
+                            o.PollOptionId,
+                            o.OptionText,
+                            o.VoteCount
+                        }).ToList()
+                    });
+                #endregion
+                
                 return ApiResponse<string>.Success(null, "Vote removed successfully.");
             }
             catch (Exception ex)

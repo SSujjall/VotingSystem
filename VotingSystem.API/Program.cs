@@ -4,6 +4,7 @@ using Microsoft.OpenApi.Models;
 using System.Text;
 using System.Text.Json;
 using VotingSystem.API.DI;
+using VotingSystem.API.Features.Hubs;
 using VotingSystem.API.Mappers;
 using VotingSystem.Common.Middlewares;
 using VotingSystem.Common.ResponseModel;
@@ -135,6 +136,9 @@ app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+// Mapping votehub to endpoint
+app.MapHub<VoteHub>("/votehub");
 
 app.MapControllers();
 
