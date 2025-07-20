@@ -1,7 +1,6 @@
 using AutoMapper;
 using Microsoft.AspNetCore.SignalR;
 using VotingSystem.API.Features.Hubs;
-using VotingSystem.API.Features.Polls.DTOs;
 using VotingSystem.API.Features.Voting.DTOs;
 using VotingSystem.Common.ResponseModel;
 using VotingSystem.Domain.Entities;
@@ -16,7 +15,7 @@ namespace VotingSystem.API.Features.Voting.Services
         private readonly IMapper _mapper;
         private readonly ILogger<VoteService> _logger;
         private readonly IHubContext<VoteHub> _hubContext;
-        
+
         public VoteService(IPollRepository pollRepository, IVoteRepository voteRepository,
             IMapper mapper, ILogger<VoteService> logger, IHubContext<VoteHub> hubContext)
         {
@@ -71,7 +70,7 @@ namespace VotingSystem.API.Features.Voting.Services
                 {
                     return ApiResponse<VoteResponseDTO>.Failed(null, "Failed to update poll's voting count");
                 }
-                
+
                 #region SignalR Update
                 await _hubContext.Clients
                     .Group($"poll-{poll.PollId}")
@@ -130,7 +129,7 @@ namespace VotingSystem.API.Features.Voting.Services
                 {
                     return ApiResponse<string>.Failed(null, "Failed to remove vote.");
                 }
-                
+
                 #region SignalR Update
                 await _hubContext.Clients
                     .Group($"poll-{poll.PollId}")
@@ -145,7 +144,7 @@ namespace VotingSystem.API.Features.Voting.Services
                         }).ToList()
                     });
                 #endregion
-                
+
                 return ApiResponse<string>.Success(null, "Vote removed successfully.");
             }
             catch (Exception ex)
