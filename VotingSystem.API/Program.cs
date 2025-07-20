@@ -2,9 +2,11 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using System.Text.Json;
 using VotingSystem.API.DI;
 using VotingSystem.API.Mappers;
 using VotingSystem.Common.Middlewares;
+using VotingSystem.Common.ResponseModel;
 using VotingSystem.Infrastructure.ExternalServices.EmailService.Config;
 using VotingSystem.Infrastructure.ExternalServices.JwtService.Config;
 
@@ -16,6 +18,10 @@ var configuration = builder.Configuration;
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+
+#region Add Infrastructure FROM DI COntainer
+builder.Services.AddInfrastructure(builder.Configuration);
+#endregion
 
 #region Swagger configuration
 builder.Services.AddSwaggerGen(c =>
@@ -44,10 +50,6 @@ builder.Services.AddSwaggerGen(c =>
 });
 #endregion
 
-#region Add Infrastructure FROM DI COntainer
-builder.Services.AddInfrastructure(builder.Configuration);
-#endregion
-
 #region Authentication JWT Config
 builder.Services.AddAuthentication(options =>
 {
@@ -69,6 +71,26 @@ builder.Services.AddAuthentication(options =>
             ValidIssuer = configuration["JWT:ValidIssuer"],
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"]))
         };
+
+        // Custom message for when [Authorize] is used and user is not authorized or authenticated (no token is found in header)
+        options.Events = new JwtBearerEvents
+        {
+            OnChallenge = context =>
+            {
+                // Skip the default logic.
+                context.HandleResponse();
+
+                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                context.Response.ContentType = "application/json";
+
+                var result = JsonSerializer.Serialize(ApiResponse<string>.Failed(
+                    new Dictionary<string, string> { { "Authentication", "User not authenticated" } },
+                    "Unauthenticated access"
+                ));
+
+                return context.Response.WriteAsync(result);
+            }
+        };
     });
 #endregion
 
@@ -84,9 +106,6 @@ var emailConfig = builder.Configuration.GetSection("EmailConfiguration").Get<Ema
 builder.Services.AddSingleton(emailConfig);
 #endregion
 
-// Automapper Config
-builder.Services.AddAutoMapper(typeof(PollMappingProfile));
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -96,7 +115,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "VotingSystem API v1"));
 }
 
-app.UseStaticFiles();
+//app.UseStaticFiles();
 
 
 // Custom global error handling extension

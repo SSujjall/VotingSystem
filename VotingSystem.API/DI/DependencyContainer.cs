@@ -4,10 +4,13 @@ using VotingSystem.API.Features.Auth.Services;
 using VotingSystem.API.Features.Polls.Services;
 using VotingSystem.API.Features.UserProfile.Services;
 using VotingSystem.API.Features.Voting.Services;
+using VotingSystem.API.Features.VotingHistory.Services;
+using VotingSystem.API.Mappers;
 using VotingSystem.Domain.Entities;
 using VotingSystem.Infrastructure.Data;
 using VotingSystem.Infrastructure.ExternalServices.EmailService;
 using VotingSystem.Infrastructure.ExternalServices.JwtService;
+using VotingSystem.Infrastructure.Health;
 using VotingSystem.Infrastructure.Repositories.Implementations;
 using VotingSystem.Infrastructure.Repositories.Interfaces;
 
@@ -51,11 +54,21 @@ namespace VotingSystem.API.DI
             services.AddScoped<IVoteService, VoteService>();
             services.AddScoped<IPollsService, PollsService>();
             services.AddScoped<IVoteService, VoteService>();
+            services.AddScoped<IVotingHistoryService, VotingHistoryService>();
             #endregion
 
             #region Register External Services
             services.AddScoped<IJwtService, JwtService>();
             services.AddScoped<IEmailService, EmailService>();
+            #endregion
+
+            #region Autmapper Config
+            services.AddAutoMapper(typeof(PollMappingProfile));
+            #endregion
+
+            #region Register Health Check configs
+            services.AddHealthChecks()
+                .AddCheck<DbHealthCheck>("Database");
             #endregion
 
             return services;

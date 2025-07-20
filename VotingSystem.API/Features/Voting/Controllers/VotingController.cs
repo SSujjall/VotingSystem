@@ -55,5 +55,23 @@ namespace VotingSystem.API.Features.Voting.Controllers
             return Ok(response);
         }
 
+        [Authorize]
+        [HttpGet("get-user-vote/{pollId}")]
+        public async Task<IActionResult> GetUserVote(int pollId)
+        {
+            var userId = User.FindFirstValue("UserId");
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized(ApiResponse<string>.Failed(null, "User not authenticated."));
+            }
+
+            var response = await _voteService.GetUserVote(userId, pollId);
+            if (response == null)
+            {
+                return Ok(ApiResponse<int?>.Success(null, "User has not voted."));
+            }
+
+            return Ok(response);
+        }
     }
 }

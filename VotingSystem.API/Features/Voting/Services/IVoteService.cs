@@ -7,5 +7,6 @@ namespace VotingSystem.API.Features.Voting.Services
     {
         Task<ApiResponse<VoteResponseDTO>> Vote(string userId, VoteRequestDTO dto);
         Task<ApiResponse<string>> RemoveVote(string userId, int pollId);
+        Task<ApiResponse<object>> GetUserVote(string userId, int pollId);
     }
 }

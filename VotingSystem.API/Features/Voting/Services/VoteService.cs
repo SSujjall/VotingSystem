@@ -100,5 +100,20 @@ namespace VotingSystem.API.Features.Voting.Services
             }
             return ApiResponse<string>.Success(null, "Vote removed successfully.");
         }
+
+        public async Task<ApiResponse<object?>> GetUserVote(string userId, int pollId)
+        {
+            var result = await _voteRepository.GetVoteByUserAndPoll(userId, pollId);
+            if (result == null)
+            {
+                return ApiResponse<object?>.Success(null, "User has not voted in this poll.");
+            }
+
+            var resObj = new
+            {
+                PollOptionId = result.PollOptionId
+            };
+            return ApiResponse<object?>.Success(resObj, "User vote fetched successfully.");
+        }
     }
 }
