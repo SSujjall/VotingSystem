@@ -10,6 +10,7 @@ using VotingSystem.Common.Middlewares;
 using VotingSystem.Common.ResponseModel;
 using VotingSystem.Infrastructure.ExternalServices.EmailService.Config;
 using VotingSystem.Infrastructure.ExternalServices.JwtService.Config;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -106,6 +107,15 @@ builder.Services.Configure<JwtConfig>(jwtSection);
 var emailConfig = builder.Configuration.GetSection("EmailConfiguration").Get<EmailConfig>();
 builder.Services.AddSingleton(emailConfig);
 #endregion
+
+#region Serilog Config
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Information()
+    .WriteTo.File("Logs/log-.txt", rollingInterval: RollingInterval.Day)
+    .CreateLogger();
+#endregion
+
+builder.Host.UseSerilog();
 
 var app = builder.Build();
 
