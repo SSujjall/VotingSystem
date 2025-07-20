@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using VotingSystem.API.Features.VotingHistory.Services;
+using VotingSystem.Common.Extensions;
 using VotingSystem.Common.ResponseModel;
 
 namespace VotingSystem.API.Features.VotingHistory.Controller
@@ -22,7 +23,7 @@ namespace VotingSystem.API.Features.VotingHistory.Controller
         [HttpGet("get-history")]
         public async Task<IActionResult> GetHistory()
         {
-            var userId = User.FindFirstValue("UserId");
+            var userId = User.FindFirstValue("UserId")?.Decrypt();
             if (string.IsNullOrEmpty(userId))
             {
                 return Unauthorized(ApiResponse<string>.Failed(null, "User not authenticated"));

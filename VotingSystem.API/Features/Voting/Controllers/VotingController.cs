@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using VotingSystem.API.Features.Voting.DTOs;
 using VotingSystem.API.Features.Voting.Services;
+using VotingSystem.Common.Extensions;
 using VotingSystem.Common.ResponseModel;
 
 namespace VotingSystem.API.Features.Voting.Controllers
@@ -23,7 +24,7 @@ namespace VotingSystem.API.Features.Voting.Controllers
         [HttpPost("vote")]
         public async Task<IActionResult> Vote([FromBody] VoteRequestDTO request)
         {
-            var userId = User.FindFirstValue("UserId");
+            var userId = User.FindFirstValue("UserId")?.Decrypt();
             if (string.IsNullOrEmpty(userId))
             {
                 return Unauthorized(ApiResponse<string>.Failed(null, "User not authenticated."));
@@ -41,7 +42,7 @@ namespace VotingSystem.API.Features.Voting.Controllers
         [HttpDelete("remove-vote/{pollId}")]
         public async Task<IActionResult> RemoveVote(int pollId)
         {
-            var userId = User.FindFirstValue("UserId");
+            var userId = User.FindFirstValue("UserId")?.Decrypt();
             if (string.IsNullOrEmpty(userId))
             {
                 return Unauthorized(ApiResponse<string>.Failed(null, "User not authenticated."));
@@ -59,7 +60,7 @@ namespace VotingSystem.API.Features.Voting.Controllers
         [HttpGet("get-user-vote/{pollId}")]
         public async Task<IActionResult> GetUserVote(int pollId)
         {
-            var userId = User.FindFirstValue("UserId");
+            var userId = User.FindFirstValue("UserId")?.Decrypt();
             if (string.IsNullOrEmpty(userId))
             {
                 return Unauthorized(ApiResponse<string>.Failed(null, "User not authenticated."));

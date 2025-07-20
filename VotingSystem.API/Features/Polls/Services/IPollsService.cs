@@ -11,7 +11,7 @@ namespace VotingSystem.API.Features.Polls.Services
         Task<ApiResponse<List<PollResponseDTO>>> GetAllPolls();
         Task<ApiResponse<PollResponseDTO>> GetPollById(int pollId);
         Task<ApiResponse<string>> DeletePoll(string userId, int pollId);
-        Task<ApiResponse<PollResponseDTO>> DisablePoll(int pollId);
-        Task<ApiResponse<PollResponseDTO>> EnablePoll(int pollId);
+        Task<ApiResponse<PollResponseDTO>> DisablePoll(string userId, int pollId);
+        Task<ApiResponse<PollResponseDTO>> EnablePoll(string userId, int pollId);
     }
 }

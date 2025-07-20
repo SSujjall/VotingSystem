@@ -79,7 +79,7 @@ namespace VotingSystem.API.Features.Polls.Services
             }
         }
 
-        public async Task<ApiResponse<PollResponseDTO>> DisablePoll(int pollId)
+        public async Task<ApiResponse<PollResponseDTO>> DisablePoll(string userId, int pollId)
         {
             try
             {
@@ -87,6 +87,11 @@ namespace VotingSystem.API.Features.Polls.Services
                 if (poll is null)
                 {
                     return ApiResponse<PollResponseDTO>.Failed(null, "No poll found");
+                }
+
+                if (poll.CreatedBy != userId)
+                {
+                    return ApiResponse<PollResponseDTO>.Failed(null, "Not authorized to enable poll. Wrong user");
                 }
 
                 if (poll.IsActive is false)
@@ -112,7 +117,7 @@ namespace VotingSystem.API.Features.Polls.Services
             }
         }
 
-        public async Task<ApiResponse<PollResponseDTO>> EnablePoll(int pollId)
+        public async Task<ApiResponse<PollResponseDTO>> EnablePoll(string userId, int pollId)
         {
             try
             {
@@ -120,6 +125,11 @@ namespace VotingSystem.API.Features.Polls.Services
                 if (poll is null)
                 {
                     return ApiResponse<PollResponseDTO>.Failed(null, "No poll found");
+                }
+
+                if (poll.CreatedBy != userId)
+                {
+                    return ApiResponse<PollResponseDTO>.Failed(null, "Not authorized to enable poll. Wrong user");
                 }
 
                 if (poll.IsActive is true)

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using VotingSystem.API.Features.Polls.DTOs;
 using VotingSystem.API.Features.Polls.Services;
+using VotingSystem.Common.Extensions;
 using VotingSystem.Common.ResponseModel;
 
 namespace VotingSystem.API.Features.Polls.Controllers
@@ -18,11 +19,11 @@ namespace VotingSystem.API.Features.Polls.Controllers
             _pollService = pollService;
         }
 
-        [Authorize]
+        [Authorize(Roles = "Superadmin,Admin")]
         [HttpPost("create")]
         public async Task<IActionResult> CreatePoll([FromForm] CreatePollDTO request)
         {
-            var userId = User.FindFirst("UserId")?.Value;
+            var userId = User.FindFirst("UserId")?.Value.Decrypt();
             if (string.IsNullOrEmpty(userId))
             {
                 return Unauthorized(ApiResponse<string>.Failed(null, "User not authenticated."));
@@ -61,7 +62,13 @@ namespace VotingSystem.API.Features.Polls.Controllers
         [HttpPatch("enable/{pollId}")]
         public async Task<IActionResult> EnablePoll(int pollId)
         {
-            var response = await _pollService.EnablePoll(pollId);
+            var userId = User.FindFirst("UserId")?.Value.Decrypt();
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized(ApiResponse<string>.Failed(null, "User not authenticated."));
+            }
+
+            var response = await _pollService.EnablePoll(userId, pollId);
             if (response.Status != true)
             {
                 return StatusCode((int)response.StatusCode, response);
@@ -72,7 +79,13 @@ namespace VotingSystem.API.Features.Polls.Controllers
         [HttpPatch("disable/{pollId}")]
         public async Task<IActionResult> DisablePoll(int pollId)
         {
-            var response = await _pollService.DisablePoll(pollId);
+            var userId = User.FindFirst("UserId")?.Value.Decrypt();
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized(ApiResponse<string>.Failed(null, "User not authenticated."));
+            }
+
+            var response = await _pollService.DisablePoll(userId, pollId);
             if (response.Status != true)
             {
                 return StatusCode((int)response.StatusCode, response);
@@ -83,7 +96,7 @@ namespace VotingSystem.API.Features.Polls.Controllers
         [HttpDelete("delete/{pollId}")]
         public async Task<IActionResult> DeletePoll(int pollId)
         {
-            var userId = User.FindFirst("UserId")?.Value;
+            var userId = User.FindFirst("UserId")?.Value.Decrypt();
             if (string.IsNullOrEmpty(userId))
             {
                 return Unauthorized(ApiResponse<string>.Failed(null, "User not authenticated."));
@@ -100,7 +113,7 @@ namespace VotingSystem.API.Features.Polls.Controllers
         [HttpPut("update")]
         public async Task<IActionResult> UpdatePoll([FromBody] UpdatePollDTO dto)
         {
-            var userId = User.FindFirst("UserId")?.Value;
+            var userId = User.FindFirst("UserId")?.Value.Decrypt();
             if (string.IsNullOrEmpty(userId))
             {
                 return Unauthorized(ApiResponse<string>.Failed(null, "User not authenticated."));

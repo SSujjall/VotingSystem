@@ -5,12 +5,13 @@ using System.Text;
 using System.Text.Json;
 using VotingSystem.API.DI;
 using VotingSystem.API.Features.Hubs;
-using VotingSystem.API.Mappers;
 using VotingSystem.Common.Middlewares;
 using VotingSystem.Common.ResponseModel;
 using VotingSystem.Infrastructure.ExternalServices.EmailService.Config;
 using VotingSystem.Infrastructure.ExternalServices.JwtService.Config;
 using Serilog;
+using VotingSystem.Common.Extensions.Config;
+using VotingSystem.Common.Extensions.ExtensionHelpers;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -106,6 +107,10 @@ builder.Services.Configure<JwtConfig>(jwtSection);
 // settings the values of EmailConfiguration from configuration to the EmailConfig class
 var emailConfig = builder.Configuration.GetSection("EmailConfiguration").Get<EmailConfig>();
 builder.Services.AddSingleton(emailConfig);
+
+// setting the values for encryption model
+var encryptionSection = builder.Configuration.GetSection("Encryption");
+builder.Services.Configure<EncryptionConfig>(encryptionSection);
 #endregion
 
 #region Serilog Config
@@ -118,6 +123,10 @@ Log.Logger = new LoggerConfiguration()
 builder.Host.UseSerilog();
 
 var app = builder.Build();
+
+#region Register service provider helper globally
+ServiceLocator.Init(app.Services);
+#endregion
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

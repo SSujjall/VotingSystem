@@ -6,6 +6,7 @@ using System.Text;
 using VotingSystem.Infrastructure.ExternalServices.JwtService.Config;
 using VotingSystem.Infrastructure.Repositories.Interfaces;
 using VotingSystem.Domain.Entities;
+using VotingSystem.Common.Extensions;
 
 namespace VotingSystem.Infrastructure.ExternalServices.JwtService
 {
@@ -29,7 +30,7 @@ namespace VotingSystem.Infrastructure.ExternalServices.JwtService
 
             var claims = new List<Claim>
             {
-                new Claim("UserId", user.Id),
+                new Claim("UserId", user.Id.Encrypt()),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(ClaimTypes.Role, userRole)
             };
