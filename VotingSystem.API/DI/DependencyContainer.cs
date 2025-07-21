@@ -31,6 +31,7 @@ namespace VotingSystem.API.DI
             services.AddIdentity<User, IdentityRole>(opts =>
             {
                 opts.SignIn.RequireConfirmedAccount = false;
+                opts.SignIn.RequireConfirmedEmail = false;
                 opts.Password.RequireDigit = false;
                 opts.Password.RequiredLength = 6;
                 opts.Password.RequireNonAlphanumeric = false;
