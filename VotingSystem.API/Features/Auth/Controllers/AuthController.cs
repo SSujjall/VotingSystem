@@ -35,9 +35,9 @@ namespace VotingSystem.API.Features.Auth.Controllers
                 return Accepted(response);
             }
 
-            var verificationLink = Url.Action(nameof(ConfirmEmail), "Auth", new { token = response.Data.EmailConfirmToken, email = signupDto.Email }, Request.Scheme);
-            var emailMessage = new EmailMessage(new[] { signupDto.Email }, "Please confirm your email", $"Please confirm your email by clicking the link: {verificationLink}");
-            await _emailService.SendEmailAsync(emailMessage);
+            //var verificationLink = Url.Action(nameof(ConfirmEmail), "Auth", new { token = response.Data.EmailConfirmToken, email = signupDto.Email }, Request.Scheme);
+            //var emailMessage = new EmailMessage(new[] { signupDto.Email }, "Please confirm your email", $"Please confirm your email by clicking the link: {verificationLink}");
+            //await _emailService.SendEmailAsync(emailMessage);
             return Ok(response);
         }
 

@@ -48,6 +48,7 @@ namespace VotingSystem.API.Features.Auth.Services
                 var user = new User
                 {
                     UserName = signupDto.Username,
+                    FullName = signupDto.FullName,
                     Email = signupDto.Email,
                     SecurityStamp = Guid.NewGuid().ToString()
                 };
@@ -137,13 +138,13 @@ namespace VotingSystem.API.Features.Auth.Services
                     return ApiResponse<LoginResponseDTO>.Failed(errors, "Login failed", HttpStatusCode.Unauthorized);
                 }
 
-                var isEmailVerified = await _userManager.IsEmailConfirmedAsync(user);
+                //var isEmailVerified = await _userManager.IsEmailConfirmedAsync(user);
 
-                if (isEmailVerified == false)
-                {
-                    var errors = new Dictionary<string, string> { { "Email", "Email not verified" } };
-                    return ApiResponse<LoginResponseDTO>.Failed(errors, "Login failed", HttpStatusCode.Unauthorized);
-                }
+                //if (isEmailVerified == false)
+                //{
+                //    var errors = new Dictionary<string, string> { { "Email", "Email not verified" } };
+                //    return ApiResponse<LoginResponseDTO>.Failed(errors, "Login failed", HttpStatusCode.Unauthorized);
+                //}
 
                 #region generate jwt token
                 string generatedToken = await _jwtService.GenerateJwtToken(user);
