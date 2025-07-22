@@ -116,6 +116,7 @@ builder.Services.Configure<EncryptionConfig>(encryptionSection);
 #region Serilog Config
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Information()
+    .WriteTo.Console()
     .WriteTo.File("Logs/log-.txt", rollingInterval: RollingInterval.Day)
     .CreateLogger();
 #endregion
