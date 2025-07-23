@@ -1,1 +1,13 @@
-<p>signup works!</p>
+<h2>Signup</h2>
+<form (ngSubmit)="onSignup()">
+  <input [(ngModel)]="username" name="username" placeholder="Username" required />
+  <br />
+  <input [(ngModel)]="fullName" name="fullName" placeholder="Full Name" required />
+  <br />
+  <input [(ngModel)]="email" name="email" placeholder="Email" type="email" required />
+  <br />
+  <input [(ngModel)]="password" name="password" placeholder="Password" type="password" required />
+  <br />
+  <button type="submit">Signup</button>
+</form>
+<p *ngIf="error" style="color: red;">{{ error }}</p>

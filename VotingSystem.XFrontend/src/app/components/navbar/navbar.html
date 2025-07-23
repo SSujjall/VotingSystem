@@ -1,1 +1,41 @@
-<p>navbar works!</p>
+<nav class="bg-gray-100 p-4 shadow-md flex justify-between items-center">
+  <!-- Left Side -->
+  <div class="flex items-center gap-6">
+    <div class="text-xl font-bold text-blue-600">Voting App</div>
+    <a
+      *ngIf="auth.isLoggedIn()"
+      routerLink="/home"
+      class="text-gray-700 hover:text-blue-600 transition-colors"
+    >
+      Home
+    </a>
+    <!-- Add other menu items here if needed -->
+  </div>
+
+  <!-- Right Side -->
+  <div class="flex items-center gap-4">
+    <a
+      *ngIf="!auth.isLoggedIn()"
+      routerLink="/login"
+      class="text-gray-700 hover:text-blue-600 transition-colors"
+    >
+      Login
+    </a>
+
+    <a
+      *ngIf="!auth.isLoggedIn()"
+      routerLink="/signup"
+      class="text-gray-700 hover:text-blue-600 transition-colors"
+    >
+      Signup
+    </a>
+
+    <button
+      *ngIf="auth.isLoggedIn()"
+      (click)="logout()"
+      class="text-red-600 hover:text-red-800 transition-colors"
+    >
+      Logout
+    </button>
+  </div>
+</nav>
