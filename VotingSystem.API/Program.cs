@@ -123,6 +123,16 @@ Log.Logger = new LoggerConfiguration()
 
 builder.Host.UseSerilog();
 
+#region CORS Policy
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+    });
+});
+#endregion
+
 var app = builder.Build();
 
 #region Register service provider helper globally
@@ -143,6 +153,8 @@ if (app.Environment.IsDevelopment())
 app.UseErrorHandling();
 
 app.UseHttpsRedirection();
+
+app.UseCors("AllowAll");
 
 app.UseAuthentication();
 app.UseAuthorization();

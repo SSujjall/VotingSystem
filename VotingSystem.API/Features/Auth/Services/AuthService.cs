@@ -127,7 +127,7 @@ namespace VotingSystem.API.Features.Auth.Services
                 if (user == null)
                 {
                     var errors = new Dictionary<string, string> { { "Username", "Userame does not exist." } };
-                    return ApiResponse<LoginResponseDTO>.Failed(errors, "Login failed", HttpStatusCode.NotFound);
+                    return ApiResponse<LoginResponseDTO>.Failed(errors, "Login failed", HttpStatusCode.Unauthorized);
                 }
 
                 var isPasswordCorrect = await _userManager.CheckPasswordAsync(user, loginDto.Password);

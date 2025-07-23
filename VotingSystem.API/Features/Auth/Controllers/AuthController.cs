@@ -32,7 +32,7 @@ namespace VotingSystem.API.Features.Auth.Controllers
             var response = await _authService.RegisterUser(signupDto);
             if (response.StatusCode != HttpStatusCode.OK)
             {
-                return Accepted(response);
+                return StatusCode((int)response.StatusCode, response);
             }
 
             //var verificationLink = Url.Action(nameof(ConfirmEmail), "Auth", new { token = response.Data.EmailConfirmToken, email = signupDto.Email }, Request.Scheme);
@@ -48,7 +48,7 @@ namespace VotingSystem.API.Features.Auth.Controllers
             var response = await _authService.RegisterUser(signupDto, true);
             if (response.StatusCode != HttpStatusCode.OK)
             {
-                return Accepted(response);
+                return StatusCode((int)response.StatusCode, response);
             }
 
             var verificationLink = Url.Action(nameof(ConfirmEmail), "Auth", new { token = response.Data.EmailConfirmToken, email = signupDto.Email }, Request.Scheme);
@@ -74,7 +74,7 @@ namespace VotingSystem.API.Features.Auth.Controllers
             var response = await _authService.LoginUser(model);
             if (response.StatusCode != HttpStatusCode.OK)
             {
-                return Accepted(response);
+                return StatusCode((int)response.StatusCode, response);
             }
 
             return Ok(response);

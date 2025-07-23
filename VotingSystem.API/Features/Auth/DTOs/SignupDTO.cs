@@ -7,7 +7,7 @@ namespace VotingSystem.API.Features.Auth.DTOs
         [Required(ErrorMessage = "User Name is required")]
         public string Username { get; set; }
 
-        [Required(ErrorMessage = "User Name is required")]
+        [Required(ErrorMessage = "Full Name is required")]
         public string FullName { get; set; }
 
         [EmailAddress]
