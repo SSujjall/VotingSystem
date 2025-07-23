@@ -13,7 +13,7 @@ namespace VotingSystem.API.Features.Polls.Services
         private readonly ILogger<PollsService> _logger;
 
 
-        public PollsService(IPollRepository pollRepository, IMapper mapper, 
+        public PollsService(IPollRepository pollRepository, IMapper mapper,
             ILogger<PollsService> logger)
         {
             _pollRepository = pollRepository;
@@ -61,10 +61,10 @@ namespace VotingSystem.API.Features.Polls.Services
                     return ApiResponse<string>.Failed(null, "No poll found");
                 }
 
-                if (poll.CreatedBy != userId)
-                {
-                    return ApiResponse<string>.Failed(null, "Unauthorized deletetion attempt");
-                }
+                //if (poll.CreatedBy != userId)
+                //{
+                //    return ApiResponse<string>.Failed(null, "Unauthorized deletetion attempt");
+                //}
 
                 var result = await _pollRepository.Delete(poll);
                 if (result is false)
@@ -72,7 +72,8 @@ namespace VotingSystem.API.Features.Polls.Services
                     return ApiResponse<string>.Failed(null, "Failed to delete poll");
                 }
                 return ApiResponse<string>.Success(null, "Poll deleted successfully");
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 _logger.LogError(ex, "Error occurred in DeletePoll");
                 return ApiResponse<string>.Failed(null, "An unexpected error occurred. Please try again later.");
@@ -89,10 +90,10 @@ namespace VotingSystem.API.Features.Polls.Services
                     return ApiResponse<PollResponseDTO>.Failed(null, "No poll found");
                 }
 
-                if (poll.CreatedBy != userId)
-                {
-                    return ApiResponse<PollResponseDTO>.Failed(null, "Not authorized to enable poll. Wrong user");
-                }
+                //if (poll.CreatedBy != userId)
+                //{
+                //    return ApiResponse<PollResponseDTO>.Failed(null, "Not authorized to enable poll. Wrong user");
+                //}
 
                 if (poll.IsActive is false)
                 {
@@ -127,10 +128,10 @@ namespace VotingSystem.API.Features.Polls.Services
                     return ApiResponse<PollResponseDTO>.Failed(null, "No poll found");
                 }
 
-                if (poll.CreatedBy != userId)
-                {
-                    return ApiResponse<PollResponseDTO>.Failed(null, "Not authorized to enable poll. Wrong user");
-                }
+                //if (poll.CreatedBy != userId)
+                //{
+                //    return ApiResponse<PollResponseDTO>.Failed(null, "Not authorized to enable poll. Wrong user");
+                //}
 
                 if (poll.IsActive is true)
                 {
@@ -205,10 +206,10 @@ namespace VotingSystem.API.Features.Polls.Services
                     return ApiResponse<PollResponseDTO>.Failed(null, "No poll found");
                 }
 
-                if (poll.CreatedBy != userId)
-                {
-                    return ApiResponse<PollResponseDTO>.Failed(null, "You are not authorized to update this poll");
-                }
+                //if (poll.CreatedBy != userId)
+                //{
+                //    return ApiResponse<PollResponseDTO>.Failed(null, "You are not authorized to update this poll");
+                //}
 
                 // map the update dto fields to poll obj
                 _mapper.Map(dto, poll);

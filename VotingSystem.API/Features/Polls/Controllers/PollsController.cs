@@ -21,7 +21,7 @@ namespace VotingSystem.API.Features.Polls.Controllers
 
         [Authorize(Roles = "Superadmin,Admin")]
         [HttpPost("create")]
-        public async Task<IActionResult> CreatePoll([FromForm] CreatePollDTO request)
+        public async Task<IActionResult> CreatePoll(CreatePollDTO request)
         {
             var userId = User.FindFirst("UserId")?.Value.Decrypt();
             if (string.IsNullOrEmpty(userId))
@@ -37,7 +37,7 @@ namespace VotingSystem.API.Features.Polls.Controllers
             return Ok(response);
         }
 
-        [HttpPost("get-all")]
+        [HttpGet("get-all")]
         public async Task<IActionResult> GetAllPolls()
         {
             var response = await _pollService.GetAllPolls();
@@ -48,7 +48,7 @@ namespace VotingSystem.API.Features.Polls.Controllers
             return Ok(response);
         }
 
-        [HttpPost("get-by-id/{pollId}")]
+        [HttpGet("get-by-id/{pollId}")]
         public async Task<IActionResult> GetAllPolls(int pollId)
         {
             var response = await _pollService.GetPollById(pollId);
@@ -59,6 +59,7 @@ namespace VotingSystem.API.Features.Polls.Controllers
             return Ok(response);
         }
 
+        [Authorize(Roles = "Superadmin,Admin")]
         [HttpPatch("enable/{pollId}")]
         public async Task<IActionResult> EnablePoll(int pollId)
         {
@@ -76,6 +77,7 @@ namespace VotingSystem.API.Features.Polls.Controllers
             return Ok(response);
         }
 
+        [Authorize(Roles = "Superadmin,Admin")]
         [HttpPatch("disable/{pollId}")]
         public async Task<IActionResult> DisablePoll(int pollId)
         {
@@ -93,6 +95,7 @@ namespace VotingSystem.API.Features.Polls.Controllers
             return Ok(response);
         }
 
+        [Authorize(Roles = "Superadmin,Admin")]
         [HttpDelete("delete/{pollId}")]
         public async Task<IActionResult> DeletePoll(int pollId)
         {
@@ -110,6 +113,7 @@ namespace VotingSystem.API.Features.Polls.Controllers
             return Ok(response);
         }
 
+        [Authorize(Roles = "Superadmin,Admin")]
         [HttpPut("update")]
         public async Task<IActionResult> UpdatePoll([FromBody] UpdatePollDTO dto)
         {

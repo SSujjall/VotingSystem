@@ -111,7 +111,7 @@ namespace VotingSystem.API.Features.Auth.Services
 
                 return ApiResponse<SignupResponseDTO>.Success(response, "User created successfully");
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 _logger.LogError(ex, "Error occurred in RegisterUser for username {Username}", signupDto.Username);
                 return ApiResponse<SignupResponseDTO>.Failed(null, "An unexpected error occurred. Please try again later.");

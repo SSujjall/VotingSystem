@@ -1,14 +1,23 @@
-<nav class="bg-gray-100 p-4 shadow-md flex justify-between items-center">
+<nav class="bg-gray-100 px-8 h-20 shadow-md flex justify-between items-center">
   <!-- Left Side -->
   <div class="flex items-center gap-6">
-    <div class="text-xl font-bold text-blue-600">Voting App</div>
+    <div class="text-xl font-bold text-black cursor-pointer" routerLink="/home">Voting App</div>
     <a
-      *ngIf="auth.isLoggedIn()"
+      *ngIf="auth.isLoggedIn() && !auth.isAdmin()"
       routerLink="/home"
-      class="text-gray-700 hover:text-blue-600 transition-colors"
+      class="relative text-gray-700 after:content-[''] after:absolute after:left-0 after:-bottom-1 after:h-0.5 after:w-0 after:bg-gray-700 after:transition-all after:duration-300 hover:after:w-full"
     >
       Home
     </a>
+
+    <a
+      *ngIf="auth.isLoggedIn() && auth.isAdmin()"
+      routerLink="/dashboard"
+      class="relative text-gray-700 after:content-[''] after:absolute after:left-0 after:-bottom-1 after:h-0.5 after:w-0 after:bg-gray-700 after:transition-all after:duration-300 hover:after:w-full"
+    >
+      Dashboard
+    </a>
+
     <!-- Add other menu items here if needed -->
   </div>
 
@@ -17,7 +26,7 @@
     <a
       *ngIf="!auth.isLoggedIn()"
       routerLink="/login"
-      class="text-gray-700 hover:text-blue-600 transition-colors"
+      class="bg-black rounded-md py-1 px-3 text-white hover:bg-slate-700 transition-colors"
     >
       Login
     </a>
@@ -25,7 +34,7 @@
     <a
       *ngIf="!auth.isLoggedIn()"
       routerLink="/signup"
-      class="text-gray-700 hover:text-blue-600 transition-colors"
+      class="bg-black rounded-md py-1 px-3 text-white hover:bg-slate-700 transition-colors"
     >
       Signup
     </a>

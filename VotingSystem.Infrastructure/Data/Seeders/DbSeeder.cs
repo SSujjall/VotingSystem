@@ -111,7 +111,7 @@ namespace VotingSystem.Infrastructure.Data.Seeders
                 .HasOne(v => v.PollOption)
                 .WithMany(po => po.Votes)
                 .HasForeignKey(v => v.PollOptionId)
-                .OnDelete(DeleteBehavior.NoAction); // Prevent cascade cycle
+                .OnDelete(DeleteBehavior.Cascade); // Prevent cascade cycle
 
             // Configure indexes for performance
             builder.Entity<Vote>()

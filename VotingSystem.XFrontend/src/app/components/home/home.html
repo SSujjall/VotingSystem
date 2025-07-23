@@ -1,1 +1,42 @@
-<p>home works!</p>
+<!-- home.component.html -->
+<div class="px-8 py-6">
+  <!-- Page Title -->
+  <h2 class="text-2xl font-semibold mb-6">Active Polls</h2>
+
+  <!-- Loading / Error State -->
+  <div *ngIf="loading">Loading polls...</div>
+  <div *ngIf="error" class="text-red-600">{{ error }}</div>
+
+  <!-- Polls Grid -->
+  <div *ngIf="polls.length > 0; else noPolls" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div
+      *ngFor="let poll of polls"
+      class="border rounded-lg shadow-md p-4 bg-white cursor-pointer hover:bg-gray-50 transition"
+      (click)="openPollVote(poll.pollId)"
+    >
+      <!-- Title & Status -->
+      <div class="flex justify-between items-start mb-2">
+        <h3 class="text-lg font-semibold text-black">{{ poll.title }}</h3>
+        <span
+          class="text-xs px-2 py-1 rounded-full"
+          [ngClass]="poll.isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'"
+        >
+          {{ poll.isActive ? 'Active' : 'Inactive' }}
+        </span>
+      </div>
+
+      <!-- Description -->
+      <p class="text-gray-700 mb-2">{{ poll.description }}</p>
+
+      <!-- End Date -->
+      <p class="text-sm text-gray-500">
+        Ends at: {{ poll.endsAt | date: 'medium' }}
+      </p>
+    </div>
+  </div>
+
+  <!-- No Polls -->
+  <ng-template #noPolls>
+    <p class="text-center text-gray-600 mt-10">No active polls found.</p>
+  </ng-template>
+</div>
