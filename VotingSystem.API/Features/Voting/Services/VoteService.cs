@@ -76,12 +76,12 @@ namespace VotingSystem.API.Features.Voting.Services
                     .Group($"poll-{poll.PollId}")
                     .SendAsync("ReceiveVoteUpdate", new
                     {
-                        PollId = poll.PollId,
-                        Options = poll.Options.Select(o => new
+                        pollId = poll.PollId,
+                        options = poll.Options.Select(o => new
                         {
-                            o.PollOptionId,
-                            o.OptionText,
-                            o.VoteCount
+                            pollOptionId = o.PollOptionId,
+                            optionText = o.OptionText,
+                            voteCount = o.VoteCount
                         }).ToList()
                     });
                 #endregion
@@ -135,12 +135,12 @@ namespace VotingSystem.API.Features.Voting.Services
                     .Group($"poll-{poll.PollId}")
                     .SendAsync("ReceiveVoteUpdate", new
                     {
-                        PollId = poll.PollId,
-                        Options = poll.Options.Select(o => new
+                        pollId = poll.PollId,
+                        options = poll.Options.Select(o => new
                         {
-                            o.PollOptionId,
-                            o.OptionText,
-                            o.VoteCount
+                            pollOptionId = o.PollOptionId,
+                            optionText = o.OptionText,
+                            voteCount = o.VoteCount
                         }).ToList()
                     });
                 #endregion
