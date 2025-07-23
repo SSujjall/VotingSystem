@@ -7,6 +7,9 @@ import { Dashboard } from './components/admin/dashboard/dashboard';
 import { adminGuard } from './guards/admin/admin-guard';
 import { EditPoll } from './components/admin/edit-poll/edit-poll';
 import { PollVote } from './components/poll-vote/poll-vote';
+import { UserProfile } from './components/user-profile/user-profile';
+import { redirectIfAuthGuard } from './guards/redirect/redirect-if-auth-guard';
+import { Health } from './components/health/health';
 
 export const routes: Routes = [
   {
@@ -17,16 +20,24 @@ export const routes: Routes = [
   {
     path: 'login',
     component: Login,
+    canActivate: [redirectIfAuthGuard],
   },
   {
     path: 'signup',
     component: Signup,
+    canActivate: [redirectIfAuthGuard],
   },
   {
     path: 'home',
     component: Home,
     canActivate: [authGuard],
     title: 'Home',
+  },
+  {
+    path: 'user-profile',
+    component: UserProfile,
+    canActivate: [authGuard],
+    title: 'User Profile',
   },
   {
     path: 'dashboard',
@@ -45,6 +56,12 @@ export const routes: Routes = [
     component: EditPoll,
     canActivate: [authGuard, adminGuard],
     title: 'Edit Poll',
+  },
+  {
+    path: 'health',
+    component: Health,
+    canActivate: [authGuard, adminGuard],
+    title: 'Health',
   },
   {
     path: 'poll-vote/:id',

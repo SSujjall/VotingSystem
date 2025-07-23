@@ -1,8 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { PollService } from '../../services/poll/poll.service';
 import { VoteService } from '../../services/vote/vote.service';
+import * as signalR from '@microsoft/signalr';
+import { PollOption } from '../../models/poll.model';
 
 @Component({
   selector: 'app-poll-vote',
@@ -10,13 +12,14 @@ import { VoteService } from '../../services/vote/vote.service';
   templateUrl: './poll-vote.html',
   styleUrl: './poll-vote.css',
 })
-export class PollVote implements OnInit {
+export class PollVote implements OnInit, OnDestroy {
   pollId!: number;
   poll: any = null;
   userVoteOptionId?: number;
   loading = false;
   error = '';
   success = '';
+  private hubConnection!: signalR.HubConnection;
 
   constructor(
     private route: ActivatedRoute,
@@ -29,12 +32,19 @@ export class PollVote implements OnInit {
     this.loadPoll();
   }
 
+  ngOnDestroy() {
+    if (this.hubConnection) {
+      this.hubConnection.stop();
+    }
+  }
+
   loadPoll() {
     this.loading = true;
     this.pollService.getPollById(this.pollId).subscribe({
       next: (res) => {
         this.poll = res.data;
         this.loadUserVote();
+        this.setupSignalR();
         this.loading = false;
       },
       error: () => {
@@ -42,6 +52,43 @@ export class PollVote implements OnInit {
         this.loading = false;
       },
     });
+  }
+
+  // SIGNALR setup
+  private setupSignalR() {
+    this.hubConnection = new signalR.HubConnectionBuilder()
+      .withUrl('https://localhost:7243/votehub', {
+        withCredentials: false,
+      })
+      .configureLogging(signalR.LogLevel.Information)
+      .withAutomaticReconnect()
+      .build();
+
+    this.hubConnection
+      .start()
+      .then(() => {
+        this.hubConnection.invoke('JoinPollGroup', this.pollId.toString());
+      })
+      .catch((err) => console.error('Error connecting SignalR: ', err));
+
+    this.hubConnection.on('ReceiveVoteUpdate', (data) => {
+  if (data.pollId === this.pollId && this.poll?.options) {
+    // Create a map from updated options for fast lookup
+    const updatedVotesMap = new Map<number, number>();
+    data.options.forEach((opt: PollOption) => {
+      updatedVotesMap.set(opt.pollOptionId, opt.voteCount);
+    });
+
+    // Update voteCount for existing options, keep original order
+    this.poll.options = this.poll.options.map((option: PollOption) => {
+      const updatedCount = updatedVotesMap.get(option.pollOptionId);
+      return updatedCount !== undefined
+        ? { ...option, voteCount: updatedCount }
+        : option;
+    });
+  }
+});
+
   }
 
   loadUserVote() {

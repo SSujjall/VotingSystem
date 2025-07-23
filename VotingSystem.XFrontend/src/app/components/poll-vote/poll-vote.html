@@ -14,12 +14,7 @@
           (click)="vote(option.pollOptionId)"
           [disabled]="userVoteOptionId === option.pollOptionId"
         >
-          {{ option.optionText }}
-          <span
-            *ngIf="userVoteOptionId === option.pollOptionId"
-            class="ml-2 font-bold"
-            >(Your vote)</span
-          >
+          {{ option.optionText }} - {{ option.voteCount || 0 }} votes
         </button>
       </li>
     </ul>

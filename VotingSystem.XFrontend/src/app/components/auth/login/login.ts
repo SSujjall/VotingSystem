@@ -32,7 +32,10 @@ export class Login {
 
             console.log('User role:', role);
 
-            if (role?.toUpperCase() === 'ADMIN' || role?.toUpperCase() === 'SUPERADMIN') {
+            if (
+              role?.toUpperCase() === 'ADMIN' ||
+              role?.toUpperCase() === 'SUPERADMIN'
+            ) {
               this.router.navigate(['/dashboard']);
             } else {
               this.router.navigate(['/home']);

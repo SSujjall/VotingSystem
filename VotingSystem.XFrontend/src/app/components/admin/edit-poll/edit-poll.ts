@@ -3,7 +3,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { PollService } from '../../../services/poll/poll.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Poll } from '../../../models/poll.model';
 
 @Component({
   selector: 'app-edit-poll',
@@ -99,7 +98,7 @@ export class EditPoll {
           error: () => (this.error = 'Update failed'),
         });
     } else {
-      // For add, call create endpoint
+      // if its not edit mode then call the create poll endpoint
       this.pollService.addPoll(payload).subscribe({
         next: () => {
           this.success = 'Poll created successfully';
