@@ -25,7 +25,7 @@ namespace VotingSystem.Infrastructure.Data
         }
 
         public DbSet<User> Users { get; set; }
-        public DbSet<User> Roles { get; set; }
+        public DbSet<Role> Roles { get; set; }
         public DbSet<Poll> Polls { get; set; }
         public DbSet<PollOption> PollOptions { get; set; }
         public DbSet<Vote> Votes { get; set; }
