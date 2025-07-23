@@ -11,6 +11,15 @@
     </a>
 
     <a
+      *ngIf="auth.isLoggedIn() && !auth.isAdmin()"
+      routerLink="/user-profile"
+      class="relative text-gray-700 after:content-[''] after:absolute after:left-0 after:-bottom-1 after:h-0.5 after:w-0 after:bg-gray-700 after:transition-all after:duration-300 hover:after:w-full"
+    >
+      Profile
+    </a>
+
+    <!-- Admin Links -->
+    <a
       *ngIf="auth.isLoggedIn() && auth.isAdmin()"
       routerLink="/dashboard"
       class="relative text-gray-700 after:content-[''] after:absolute after:left-0 after:-bottom-1 after:h-0.5 after:w-0 after:bg-gray-700 after:transition-all after:duration-300 hover:after:w-full"
@@ -18,7 +27,13 @@
       Dashboard
     </a>
 
-    <!-- Add other menu items here if needed -->
+    <a
+      *ngIf="auth.isLoggedIn() && auth.isAdmin()"
+      routerLink="/health"
+      class="relative text-gray-700 after:content-[''] after:absolute after:left-0 after:-bottom-1 after:h-0.5 after:w-0 after:bg-gray-700 after:transition-all after:duration-300 hover:after:w-full"
+    >
+      Health
+    </a>
   </div>
 
   <!-- Right Side -->
