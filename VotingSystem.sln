@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VotingSystem.Infrastructure
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VotingSystem.Common", "VotingSystem.Common\VotingSystem.Common.csproj", "{1AB1B111-2334-49CE-A5E1-4106B8CF21B5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VotingSystem.Tests", "VotingSystem.Tests\VotingSystem.Tests.csproj", "{DCB85170-2A32-4FA7-A874-993D03A66313}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{1AB1B111-2334-49CE-A5E1-4106B8CF21B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1AB1B111-2334-49CE-A5E1-4106B8CF21B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1AB1B111-2334-49CE-A5E1-4106B8CF21B5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DCB85170-2A32-4FA7-A874-993D03A66313}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DCB85170-2A32-4FA7-A874-993D03A66313}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DCB85170-2A32-4FA7-A874-993D03A66313}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DCB85170-2A32-4FA7-A874-993D03A66313}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
