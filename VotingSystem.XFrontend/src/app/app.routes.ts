@@ -10,6 +10,7 @@ import { PollVote } from './components/poll-vote/poll-vote';
 import { UserProfile } from './components/user-profile/user-profile';
 import { redirectIfAuthGuard } from './guards/redirect/redirect-if-auth-guard';
 import { Health } from './components/health/health';
+import { History } from './components/history/history';
 
 export const routes: Routes = [
   {
@@ -38,6 +39,12 @@ export const routes: Routes = [
     component: UserProfile,
     canActivate: [authGuard],
     title: 'User Profile',
+  },
+  {
+    path: 'history',
+    component: History,
+    canActivate: [authGuard],
+    title: 'Voting History',
   },
   {
     path: 'dashboard',

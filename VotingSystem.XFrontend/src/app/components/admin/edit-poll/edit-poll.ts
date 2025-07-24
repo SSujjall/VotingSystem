@@ -17,7 +17,7 @@ export class EditPoll {
   description = '';
   endsAt = '';
   isActive = false;
-  options: string[] = [];
+  options: { value: string }[] = [];
   error = '';
   success = '';
   isEditMode = false;
@@ -53,28 +53,32 @@ export class EditPoll {
         }
         this.title = poll.title;
         this.description = poll.description;
-        this.endsAt = poll.endsAt.split('T')[0]; // for date input, keep only yyyy-MM-dd
+        this.endsAt = poll.endsAt.split('T')[0];
         this.isActive = poll.isActive;
-        this.options = poll.options.map((o: any) => o.optionText);
+        this.options = poll.options.map((o: any) => ({ value: o.optionText }));
       },
-      error: (err) => (this.error = 'Failed to load poll'),
+      error: () => (this.error = 'Failed to load poll'),
     });
   }
 
   initEmptyPoll() {
     this.title = '';
     this.description = '';
-    this.endsAt = new Date().toISOString().split('T')[0]; // default to today
+    this.endsAt = new Date().toISOString().split('T')[0];
     this.isActive = false;
-    this.options = ['']; // start with one empty option
+    this.options = [{ value: '' }];
   }
 
   addOption() {
-    this.options.push('');
+    this.options.push({ value: '' });
   }
 
   removeOption(index: number) {
     this.options.splice(index, 1);
+  }
+
+  trackByIndex(index: number, item: any) {
+    return index;
   }
 
   onSave() {
@@ -86,23 +90,19 @@ export class EditPoll {
       description: this.description,
       endsAt: new Date(this.endsAt).toISOString(),
       isActive: this.isActive,
-      options: this.options.filter((o) => o.trim() !== ''),
+      options: this.options.map((o) => o.value).filter((o) => o.trim() !== ''),
     };
 
     if (this.isEditMode) {
-      // For edit, include pollId
-      this.pollService
-        .updatePoll({ ...payload, pollId: this.pollId })
-        .subscribe({
-          next: () => (this.success = 'Poll updated successfully'),
-          error: () => (this.error = 'Update failed'),
-        });
+      this.pollService.updatePoll({ ...payload, pollId: this.pollId }).subscribe({
+        next: () => (this.success = 'Poll updated successfully'),
+        error: () => (this.error = 'Update failed'),
+      });
     } else {
-      // if its not edit mode then call the create poll endpoint
       this.pollService.addPoll(payload).subscribe({
         next: () => {
           this.success = 'Poll created successfully';
-          this.router.navigate(['/dashboard']); // navigate back or reset form
+          this.router.navigate(['/dashboard']);
         },
         error: () => (this.error = 'Poll creation failed'),
       });
@@ -110,38 +110,28 @@ export class EditPoll {
   }
 
   enablePoll() {
-    if (!this.isEditMode || this.isActive) return; // Enable only in edit mode
+    if (!this.isEditMode || this.isActive) return;
     this.pollService.enablePoll(this.pollId!).subscribe({
       next: () => {
         this.isActive = true;
         this.success = 'Poll enabled';
-        this.error = ''; // clear any previous error
+        this.error = '';
       },
-      error: (err) => {
-        if (err?.error?.message) {
-          this.error = err.error.message;
-        } else {
-          this.error = 'Enable failed';
-        }
-      },
+      error: (err) =>
+        (this.error = err?.error?.message || 'Enable failed'),
     });
   }
 
   disablePoll() {
-    if (!this.isEditMode || !this.isActive) return; // Disable only in edit mode
+    if (!this.isEditMode || !this.isActive) return;
     this.pollService.disablePoll(this.pollId!).subscribe({
       next: () => {
         this.isActive = false;
         this.success = 'Poll disabled';
-        this.error = ''; // clear any previous error
+        this.error = '';
       },
-      error: (err) => {
-        if (err?.error?.message) {
-          this.error = err.error.message;
-        } else {
-          this.error = 'Enable failed';
-        }
-      },
+      error: (err) =>
+        (this.error = err?.error?.message || 'Disable failed'),
     });
   }
 }
