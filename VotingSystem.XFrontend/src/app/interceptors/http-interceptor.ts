@@ -13,7 +13,7 @@ export const httpInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(cloned).pipe(
     tap(res => {
-      // Optional: success log/logic
+      
     }),
     catchError((err: HttpErrorResponse) => {
       if (err.status === 401 || err.status === 403) {
