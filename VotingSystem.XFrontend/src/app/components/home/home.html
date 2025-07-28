@@ -1,24 +1,25 @@
-<!-- home.component.html -->
-<div class="px-8 py-6">
+<div class="px-6 py-6">
   <!-- Page Title -->
-  <h2 class="text-2xl font-semibold mb-6">Active Polls</h2>
+  <h2 class="text-3xl font-bold text-gray-800 mb-6">Active Polls</h2>
 
   <!-- Loading / Error State -->
-  <div *ngIf="loading">Loading polls...</div>
-  <div *ngIf="error" class="text-red-600">{{ error }}</div>
+  <div *ngIf="loading" class="text-gray-500 italic">Loading polls...</div>
+  <div *ngIf="error" class="text-red-600 font-medium">{{ error }}</div>
 
   <!-- Polls Grid -->
   <div *ngIf="polls.length > 0; else noPolls" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
     <div
       *ngFor="let poll of polls"
-      class="border rounded-lg shadow-md p-4 bg-white cursor-pointer hover:bg-gray-50 transition"
+      class="bg-white rounded-xl shadow-lg border hover:shadow-xl transition-all duration-300 p-6 cursor-pointer group"
       (click)="openPollVote(poll.pollId)"
     >
       <!-- Title & Status -->
-      <div class="flex justify-between items-start mb-2">
-        <h3 class="text-lg font-semibold text-black">{{ poll.title }}</h3>
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-xl font-semibold text-gray-800 group-hover:text-blue-600 transition-colors">
+          {{ poll.title }}
+        </h3>
         <span
-          class="text-xs px-2 py-1 rounded-full"
+          class="text-xs font-semibold px-3 py-1 rounded-full"
           [ngClass]="poll.isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'"
         >
           {{ poll.isActive ? 'Active' : 'Inactive' }}
@@ -26,17 +27,18 @@
       </div>
 
       <!-- Description -->
-      <p class="text-gray-700 mb-2">{{ poll.description }}</p>
+      <p class="text-gray-600 mb-3">{{ poll.description }}</p>
 
       <!-- End Date -->
-      <p class="text-sm text-gray-500">
-        Ends at: {{ poll.endsAt | date: 'medium' }}
+      <p class="text-sm text-gray-500 flex items-center gap-1">
+        Ends: 
+        <span class="font-medium">{{ poll.endsAt | date:'longDate' }}</span>
       </p>
     </div>
   </div>
 
-  <!-- If No No Polls then dispplay this -->
+  <!-- No Polls Message -->
   <ng-template #noPolls>
-    <p class="text-center text-gray-600 mt-10">No active polls found.</p>
+    <p class="text-center text-gray-500 mt-12 text-lg">No active polls found.</p>
   </ng-template>
 </div>

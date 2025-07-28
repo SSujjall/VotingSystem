@@ -1,34 +1,46 @@
-<div class="max-w-xl mx-auto p-6 bg-white rounded shadow mt-8">
-  <h2 class="text-2xl font-bold mb-4">System Health</h2>
+<div class="max-w-3xl mx-auto p-6 bg-white rounded-lg shadow mt-8">
+  <h2 class="text-3xl font-bold text-gray-800 mb-4">System Health</h2>
 
-  <div *ngIf="loading" class="text-gray-600">Loading health status...</div>
-  <div *ngIf="error" class="text-red-600">{{ error }}</div>
+  <div *ngIf="loading" class="text-gray-600 italic">Loading health status...</div>
+  <div *ngIf="error" class="text-red-600 font-medium">{{ error }}</div>
 
   <div *ngIf="healthData">
-    <p>
-      <strong>Overall Status:</strong>
-      <span [class.text-green-600]="healthData.overallStatus === 'Healthy'" 
-            [class.text-red-600]="healthData.overallStatus !== 'Healthy'">
-        {{ healthData.overallStatus }}
-      </span>
-    </p>
-
-    <p class="mb-2">{{ healthData.message }}</p>
-    <p class="text-sm text-gray-500 mb-4">
-      Checked at: {{ healthData.timestamp | date:'medium' }}
-    </p>
-
-    <h3 class="text-xl font-semibold mb-2">Component Checks:</h3>
-    <ul>
-      <li *ngFor="let check of healthData.checks" class="mb-2">
-        <strong>{{ check.component }}:</strong>
-        <span [class.text-green-600]="check.status === 'Healthy'" 
-              [class.text-red-600]="check.status !== 'Healthy'">
-          {{ check.status }}
+    <div class="mb-4">
+      <p class="text-lg font-semibold">
+        Overall Status: 
+        <span [class.text-green-600]="healthData.overallStatus === 'Healthy'" 
+              [class.text-red-600]="healthData.overallStatus !== 'Healthy'">
+          {{ healthData.overallStatus }}
         </span>
-        <br />
-        <small>{{ check.description }}</small>
-      </li>
-    </ul>
+      </p>
+      <p class="text-gray-700 mb-2">{{ healthData.message }}</p>
+      <p class="text-sm text-gray-500">Checked at: {{ healthData.timestamp | date:'medium' }}</p>
+    </div>
+
+    <h3 class="text-xl font-semibold text-gray-800 mb-3">Component Checks</h3>
+
+    <div class="overflow-x-auto">
+      <table class="min-w-full text-left border rounded-lg overflow-hidden">
+        <thead class="bg-gray-100 text-gray-700 uppercase text-sm">
+          <tr>
+            <th class="px-4 py-3">Component</th>
+            <th class="px-4 py-3">Status</th>
+            <th class="px-4 py-3">Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let check of healthData.checks" class="border-t hover:bg-gray-50 transition-colors">
+            <td class="px-4 py-2 font-medium text-gray-800">{{ check.component }}</td>
+            <td class="px-4 py-2">
+              <span [class.text-green-600]="check.status === 'Healthy'" 
+                    [class.text-red-600]="check.status !== 'Healthy'">
+                {{ check.status }}
+              </span>
+            </td>
+            <td class="px-4 py-2 text-gray-600 text-sm">{{ check.description }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>

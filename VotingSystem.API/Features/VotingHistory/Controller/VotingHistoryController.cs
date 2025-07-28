@@ -19,7 +19,7 @@ namespace VotingSystem.API.Features.VotingHistory.Controller
         }
 
         [Authorize]
-        [HttpGet("get-history")]
+        [HttpGet("get-history")] 
         public async Task<IActionResult> GetHistory()
         {
             var userId = User.FindFirstValue("UserId")?.Decrypt();
