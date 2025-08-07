@@ -87,37 +87,6 @@ cd voting-app
 4. Monitor voting statistics
 5. Close/open voting periods
 
-## Project Structure
-
-```
-voting-app/
-├── backend/                 # .NET Web API project
-│   ├── Controllers/         # API controllers
-│   ├── Models/             # Data models
-│   ├── Services/           # Business logic
-│   └── appsettings.json    # Configuration
-├── frontend/               # Angular project
-│   ├── src/
-│   │   ├── app/           # Angular components and services
-│   │   ├── assets/        # Static assets
-│   │   └── environments/  # Environment configurations
-│   ├── package.json       # Node.js dependencies
-│   └── angular.json       # Angular configuration
-└── README.md
-```
-
-## API Endpoints
-
-The API typically provides the following endpoints:
-
-- `GET /api/polls` - Retrieve all polls
-- `GET /api/polls/{id}` - Get specific poll details
-- `POST /api/polls` - Create a new poll (admin)
-- `POST /api/votes` - Cast a vote
-- `GET /api/results/{pollId}` - Get voting results
-
-*Check the Swagger documentation for complete API details*
-
 ## Development
 
 ### Backend Development
